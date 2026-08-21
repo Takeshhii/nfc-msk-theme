@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="NFC MSK">
+	<defs>
+		<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#12281c"/>
+			<stop offset="1" stop-color="#0b1710"/>
+		</linearGradient>
+		<linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#e6cd87"/>
+			<stop offset="1" stop-color="#c2a14e"/>
+		</linearGradient>
+	</defs>
+	<rect width="1200" height="630" fill="url(#g)"/>
+	<g transform="translate(470 210)">
+		<path d="M150 20 H55 a45 45 0 0 0 -45 45 V125 a45 45 0 0 0 45 45 H150" fill="none" stroke="#f1ead9" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+		<rect x="48" y="55" width="80" height="72" rx="12" fill="url(#gold)"/>
+		<path d="M88 55 V127 M48 91 H128 M66 55 V72 M110 55 V72 M66 110 V127 M110 110 V127" stroke="#0b1710" stroke-width="5" stroke-linecap="round"/>
+		<path d="M175 55 a50 50 0 0 1 0 80" fill="none" stroke="url(#gold)" stroke-width="12" stroke-linecap="round"/>
+		<path d="M205 30 a85 85 0 0 1 0 130" fill="none" stroke="url(#gold)" stroke-width="12" stroke-linecap="round"/>
+	</g>
+	<text x="600" y="470" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="82" font-weight="600" letter-spacing="8">
+		<tspan fill="#f1ead9">NFC</tspan><tspan fill="#e6cd87"> MSK</tspan>
+	</text>
+	<text x="600" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" letter-spacing="6" fill="#93a596">ИЗГОТОВЛЕНИЕ NFC В МОСКВЕ</text>
+</svg>
