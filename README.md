@@ -1,90 +1,79 @@
 # NFC MSK — WordPress Theme
 
-`PHP` `WordPress` `vanilla CSS/JS` — no parent theme, no page builder, no JS libraries
+Custom WordPress theme with built-in technical SEO infrastructure, built for
+[nfc-msk.ru](https://nfc-msk.ru), an NFC-products business I run (cards, tags,
+stickers, keychains, bracelets, badges, plates).
 
-This runs [nfc-msk.ru](https://nfc-msk.ru), my NFC-products business in Moscow —
-cards, tags, stickers, keychains, bracelets, badges, plates. The site used to run
-on a purchased theme (Impreza) and it was heavier than it needed to be, and I kept
-hitting its limits whenever I wanted to control something for SEO. So I rebuilt
-the theme from scratch: standalone, no parent theme dependency, no page builder,
-and simple enough that I can edit a product page's copy by just typing HTML into
-a template instead of fighting a builder UI.
+## Problem
 
-## Stack
+The site ran on a purchased theme (Impreza) that was heavier than it needed to
+be and kept getting in the way whenever I needed to control something for SEO
+— URL structure, indexation of near-duplicate pages, template-level metadata.
+Page-builder abstractions make that kind of control harder, not easier.
 
-Pure PHP, my own template system, no Impreza underneath anymore. CSS and JS are
-both hand-written (`assets/css/nfc-main.css` with an `.nfc-*` prefix and design
-tokens up top, `assets/js/nfc-main.js` for the menu/FAQ/sticky header/scroll
-reveal) — zero third-party frontend libraries. Icons and the logo are my own
-line-art SVGs. Fonts are Cormorant Garamond for headings and Nunito Sans for
-body text.
+## Solution
 
-## How it's structured
+A standalone theme, no parent theme, no page builder, with SEO handling built
+directly into the templates instead of bolted on: legacy-URL redirects,
+deliberate `noindex` on low-value duplicate pages (paginated blog listings),
+and a consistent per-page-type structure that keeps metadata predictable.
+Product and page content is plain HTML inside the templates by design — no PHP
+arrays, no shortcodes — so copy can be edited directly without touching logic.
+
+## Key features
+
+- **301 redirect map** (`nfc_legacy_redirects()` in `functions.php`) collapsing
+  old duplicate URL paths onto canonical ones (e.g. `/nfc-vizitki/` →
+  `/vizitki/`).
+- **Deliberate pagination `noindex`** — `/blog/page/N/` is excluded from the
+  index (with `rel=prev/next`), while articles stay fully discoverable through
+  the XML sitemap and on-page "related articles" links. Nothing drops out of
+  the index; it just stops competing with the real article pages.
+- **Per-page-type template system** — home, blog, article, about, help, and a
+  generic page template, each with a shared header/footer shell
+  (`inc/nfc-shell-top.php` / `nfc-shell-bottom.php`).
+- **Product/solution catalog** (`inc/nfc-catalog.php`) — every product page
+  follows the same pattern: shared blocks, FAQ, pricing table, gallery, and a
+  collapsible long-form SEO text block.
+- Hand-drawn line-art SVG icon and logo system, no icon library.
+
+## Tech stack
+
+Pure PHP (no parent theme, no builder dependency), vanilla CSS
+(`assets/css/nfc-main.css`, `.nfc-*` prefix, design tokens in `:root`) and
+vanilla JS (`assets/js/nfc-main.js` — menu, FAQ accordion, sticky header,
+scroll reveal) — no third-party frontend libraries.
+
+## Architecture
 
 ```
 inc/nfc-shell-top.php / nfc-shell-bottom.php   shared <head> / header / footer
 template-nfc-{home,blog,about,help,article,page}.php   one template per page type
 page.php / single.php / category.php / index.php / 404.php   WP fallbacks
-inc/nfc-catalog.php                             the product & solution catalog
-inc/nfc-header.php / nfc-footer.php             mega-menu, footer columns, SEO links
-inc/nfc-logos-marquee.php                       client-logo strip (light/dark tile logic)
+inc/nfc-catalog.php                             product & solution catalog data
+inc/nfc-header.php / nfc-footer.php             mega-menu, footer, SEO links
+inc/nfc-logos-marquee.php                       client-logo strip
 ```
 
-Product and page content is plain HTML written directly inside the templates —
-on purpose, not PHP arrays and not shortcodes. I wanted to be able to edit a
-product description without touching any logic.
+## My role
 
-## The SEO parts I actually built this for
+Full theme design and build, including the redirect/indexation logic — that
+part specifically exists because I own the site's SEO and needed control that
+the previous theme didn't give me.
 
-- **301 redirects** for legacy URLs (`nfc_legacy_redirects()` in `functions.php`)
-  — collapses old duplicate paths into the canonical ones, e.g.
-  `/nfc-vizitki/` → `/vizitki/`.
-- Blog pagination (`/blog/page/N/`) is deliberately `noindex`'d — articles are
-  still fully discoverable through the sitemap and the "related articles"
-  blocks, so nothing falls out of the index, it's just not competing with the
-  real article pages.
-- Every product/solution page follows the same pattern: shared blocks + FAQ +
-  price table + gallery + a collapsible long-form SEO text block at the bottom.
+## Challenges / lessons
 
-## Working notes
+The host runs a page-cache/minify plugin that doesn't cache-bust automatically
+on deploy, so a theme-version bump in `style.css` alone isn't enough — the
+plugin's cache still has to be cleared by hand after every FTP deploy, or the
+old CSS/JS sticks around silently.
 
-I bump the theme version on every build (top of `style.css`) — matters because
-the host runs a page-cache/minify plugin that doesn't cache-bust automatically,
-so after deploying I still have to go clear it manually or the old CSS sticks
-around. No build step otherwise: edit the PHP/CSS/JS directly, zip the folder,
-upload via wp-admin or FTP into `wp-content/themes/nfc-msk/`.
+## Status
 
----
+Live, in production, actively maintained.
 
-## Русская версия
+## Future improvements
 
-Это тема, на которой работает [nfc-msk.ru](https://nfc-msk.ru) — мой бизнес по
-NFC-товарам в Москве (визитки, карты, метки, стикеры, брелоки, браслеты,
-бейджи, таблички). Раньше сайт стоял на купленной теме Impreza, она была
-тяжелее, чем нужно, и я постоянно упирался в её ограничения, когда хотел
-что-то контролировать под SEO. Поэтому пересобрал тему с нуля: самостоятельная,
-без родительской темы, без конструктора страниц, и достаточно простая, чтобы
-редактировать текст товарной карточки просто HTML в шаблоне, а не воевать с
-билдером.
-
-**Стек:** чистый PHP, своя система шаблонов, никакого Impreza под капотом.
-CSS и JS написаны руками (`assets/css/nfc-main.css` с префиксом `.nfc-*`,
-`assets/js/nfc-main.js` — меню, FAQ, sticky-шапка, появление при скролле), без
-сторонних библиотек. Иконки и логотип — свои line-art SVG. Шрифты: Cormorant
-Garamond (заголовки) + Nunito Sans (текст).
-
-**Архитектура:** общий верх/низ страницы (`inc/nfc-shell-*`), отдельный шаблон
-под каждый тип страницы, каталог товаров и решений в `inc/nfc-catalog.php`.
-Контент товаров и страниц — обычный HTML прямо в шаблонах, специально не
-PHP-массивы и не шорткоды, чтобы можно было поправить текст без касания логики.
-
-**SEO, ради чего всё это и затевалось:** 301-редиректы старых URL на
-канонические, `noindex` для пагинации блога (статьи всё равно доступны через
-карту сайта и «читайте также» — из индекса ничего не выпадает), у каждой
-товарной страницы — FAQ, цены, галерея и сворачиваемый SEO-текст.
-
-**Рабочий процесс:** версию темы поднимаю при каждой сборке — на хостинге стоит
-плагин кэша/минификации, который сам не сбрасывает кэш, так что после заливки
-всё равно захожу и чищу его руками, иначе видны старые стили. Сборки как
-таковой нет: правлю PHP/CSS/JS напрямую, архивирую папку темы, заливаю через
-wp-admin или FTP в `wp-content/themes/nfc-msk/`.
+Move deploys off manual FTP zip uploads onto something scriptable, and
+automate the cache-clear step that currently has to be done by hand in
+wp-admin after every deploy.
